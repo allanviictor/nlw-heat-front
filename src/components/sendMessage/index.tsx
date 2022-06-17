@@ -5,23 +5,6 @@ import { GoSignOut, GoMarkGithub } from 'react-icons/go'
 import { api } from '../../api/api'
 
 
-/* type User ={
-    id:string
-    name:string
-    github_id:number
-    avatar_url:string
-    login:string
-}
-
-
-type MessageResponse = {
-    id:string;
-    text:string;
-    user:User;
-    created_at:string;
-    user_id:string
-} */
-
 export function SendMessage() {
     let { user, signOut } = useContext(authContext)
 
@@ -39,7 +22,7 @@ export function SendMessage() {
                 authorization: "Bearer " + localStorage.getItem('nlwtoken')
             }
         }
-
+        setMessage('')
         api.post('messages', { text: message }, headersAuth)
     }
 

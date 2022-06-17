@@ -7,12 +7,20 @@ import io from "socket.io-client";
 type Messages = {
     text: string
     id: string
+    user_id:string 
+    created_at:string
     user: {
         name: string
         avatar_url: string
     }
 }
 
+let messageQueue:Messages[] = []
+
+const socket = io('http://localhost:3333')
+socket.on('new_message',(message:Messages) => {
+    messageQueue.push(message)
+})
 
 
 export function MessageList() {
@@ -20,11 +28,19 @@ export function MessageList() {
     const [messages, setMessages] = useState<Messages[]>([])
 
     
-    const socket = io('http://localhost:3333')
-    socket.on('new_message',(message:any) => {
-        console.log(message)
-    })
+    useEffect(()=> {
+        setInterval(()=> {
+            if(messageQueue.length > 0){
+                setMessages(prevMessages=>[
+                    messageQueue[0],
+                    prevMessages[0],
+                    prevMessages[1]
+                ].filter(Boolean))
 
+                messageQueue.shift()
+            }
+        },3000)
+    },[])
 
 
     useEffect(() => {
@@ -33,7 +49,6 @@ export function MessageList() {
 
     async function getMessages() {
         await api.get<Messages[]>('/last/messages').then(response => {
-
             setMessages(response.data)
         })
 
