@@ -51,13 +51,13 @@ export function AuthProvider(props:AuthProvider){
     useEffect(()=> {
         let getToken = window.localStorage.getItem('nlwtoken')
 
-        let headerUserProfile:Object ={
-            headers:{
-                authorization: "Bearer " + getToken
-            }
-        }
-
+        
         if(getToken){
+            let headerUserProfile:Object ={
+                headers:{
+                    authorization: "Bearer " + getToken
+                }
+            }
             api.get<User>('/user/profile',headerUserProfile).then(response=> {
                 setUser(response.data)
             })

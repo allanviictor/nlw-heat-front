@@ -2,6 +2,7 @@ import styles from './Style.module.sass'
 import logo from '../../assets/ic-dowhile.png'
 import { api } from '../../api/api'
 import { useEffect, useState } from 'react'
+import io from "socket.io-client";
 
 type Messages = {
     text: string
@@ -12,9 +13,19 @@ type Messages = {
     }
 }
 
-export function MessageList() {
 
+
+export function MessageList() {
+    
     const [messages, setMessages] = useState<Messages[]>([])
+
+    
+    const socket = io('http://localhost:3333')
+    socket.on('new_message',(message:any) => {
+        console.log(message)
+    })
+
+
 
     useEffect(() => {
         getMessages()
